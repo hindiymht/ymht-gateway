@@ -16,17 +16,31 @@ export default function AttendanceForm() {
         if (storedData) {
             try {
                 const data = JSON.parse(storedData);
-                const storedDate = new Date(data.timestamp).setHours(0, 0, 0, 0);
-                const today = new Date().setHours(0, 0, 0, 0);
-
-                if (storedDate === today) {
-                    setName(data.name || "");
-                    setMobile(data.mobile || "");
+                // Check if it's an array and has at least one item
+                if (Array.isArray(data) && data.length > 0) {
+                    // Get the first item and parse it (since it's stored as stringified JSON)
+                    const firstItemData = JSON.parse(data[0]);
+                    const storedDate = new Date(firstItemData.timestamp).setHours(0, 0, 0, 0);
+                    const today = new Date().setHours(0, 0, 0, 0);
+                    if (storedDate === today) {
+                        setName(firstItemData.name || "");
+                        setMobile(firstItemData.mobile || "");
+                    } else {
+                        localStorage.removeItem("formData");
+                    }
                 } else {
-                    localStorage.removeItem("formData");
+                    const storedDate = new Date(data.timestamp).setHours(0, 0, 0, 0);
+                    const today = new Date().setHours(0, 0, 0, 0);
+                    if (storedDate === today) {
+                        setName(data.name || "");
+                        setMobile(data.mobile || "");
+                    } else {
+                        localStorage.removeItem("formData");
+                    }
                 }
             } catch (e) {
                 console.error("Error parsing local storage", e);
+                localStorage.removeItem("formData");
             }
         }
     }, []);
@@ -47,11 +61,15 @@ export default function AttendanceForm() {
                 // We use await here to ensure data is sent before redirecting
                 await fetch(scriptUrl, {
                     method: "POST",
-                    mode: "no-cors",
-                    headers: {"Content-Type": "application/json"},
+                    mode: "cors",
+                     headers: {
+                        'Content-Type': 'text/plain', // Prevents the Preflight/OPTIONS request
+                        'Accept': '*/*',
+                        'Connection': 'keep-alive',
+                    },
                     body: JSON.stringify({
                         name,
-                        mobile,
+                        mobileNo: mobile,
                         location,
                         deviceId,
                         timestamp: new Date().toISOString(),
@@ -65,6 +83,7 @@ export default function AttendanceForm() {
         } catch (error) {
             console.error("Submission error:", error);
             alert("Failed to register. Please try again.");
+        } finally {
             setIsLoading(false);
         }
     };
