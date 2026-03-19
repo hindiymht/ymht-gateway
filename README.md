@@ -59,3 +59,66 @@ Place your logos and banners in the `public/assets/` folder.
 2. **Submit**: The user enters their name and mobile number.
 3. **Log**: Data is saved to a Google Sheet via a background API call.
 4. **Join**: The user is instantly redirected to the meeting link.
+
+---
+
+## 🚀 Deployment
+
+The project is deployed using **Vercel CI/CD pipelines**.
+
+| Branch    | Environment | Purpose                       |
+|-----------|-------------|-------------------------------|
+| `main`    | Production  | Live public site              |
+| `develop` | Development | Testing & preview environment |
+
+Each push automatically triggers a deployment on Vercel.
+
+---
+
+## 🌿 Branching Strategy (Git Workflow)
+
+We follow a simple feature‑branch workflow.
+
+### Creating a new task branch
+
+```
+feature/<feature-name>
+bugfix/<issue-name>
+```
+
+### Development Flow
+
+1. Create a feature/bugfix branch from `develop`
+2. Implement changes
+3. Merge into `develop` → auto deploys to Dev site
+4. After testing, merge `develop` → `main` → deploys to Production
+
+---
+
+## 🤝 Contribution Guidelines
+
+* Never push directly to `main`
+* Use feature or bugfix branches
+* Ensure build works locally before creating PR
+* Keep commits meaningful and small
+
+---
+
+## 📊 Data Storage
+
+Attendance data is stored in Google Sheets using Google Apps Script as a webhook endpoint.
+
+Stored fields typically include:
+
+* Name
+* Mobile Number
+* City
+* Device ID
+* Timestamp
+
+---
+
+## 📌 Purpose
+
+The goal of DBF Gateway is to provide a **fast, reusable attendance gateway** for any online gathering without needing a
+new project each time — only configuration changes.
