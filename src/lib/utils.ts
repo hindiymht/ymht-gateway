@@ -30,7 +30,7 @@ export const saveFormData = (name: string, mobile: string, location: string) => 
         location,
         timestamp: new Date().toISOString(),
     };
-                                                                                         
+
     // 1. Fetch the raw data
     const existingData = localStorage.getItem("formData");
 
@@ -50,7 +50,7 @@ export const saveFormData = (name: string, mobile: string, location: string) => 
     }
 
     // 5. Add new data (tip: usually better to store objects, not stringified strings)
-    formDataArray.push(JSON.stringify(data)); 
+    formDataArray.push(JSON.stringify(data));
 
     // 6. Save back to localStorage
     localStorage.setItem("formData", JSON.stringify(formDataArray));

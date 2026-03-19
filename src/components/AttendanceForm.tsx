@@ -16,26 +16,25 @@ export default function AttendanceForm() {
         if (storedData) {
             try {
                 const data = JSON.parse(storedData);
+
                 // Check if it's an array and has at least one item
                 if (Array.isArray(data) && data.length > 0) {
                     // Get the first item and parse it (since it's stored as stringified JSON)
                     const firstItemData = JSON.parse(data[0]);
                     const storedDate = new Date(firstItemData.timestamp).setHours(0, 0, 0, 0);
                     const today = new Date().setHours(0, 0, 0, 0);
+
                     if (storedDate === today) {
                         setName(firstItemData.name || "");
                         setMobile(firstItemData.mobile || "");
-                    } else {
-                        localStorage.removeItem("formData");
                     }
                 } else {
                     const storedDate = new Date(data.timestamp).setHours(0, 0, 0, 0);
                     const today = new Date().setHours(0, 0, 0, 0);
+
                     if (storedDate === today) {
                         setName(data.name || "");
                         setMobile(data.mobile || "");
-                    } else {
-                        localStorage.removeItem("formData");
                     }
                 }
             } catch (e) {
@@ -62,16 +61,17 @@ export default function AttendanceForm() {
                 await fetch(scriptUrl, {
                     method: "POST",
                     mode: "cors",
-                     headers: {
+                    headers: {
                         'Content-Type': 'text/plain', // Prevents the Preflight/OPTIONS request
                         'Accept': '*/*',
                         'Connection': 'keep-alive',
                     },
                     body: JSON.stringify({
-                        name,
+                        name: name,
+                        mhtId: null,
                         mobileNo: mobile,
-                        location,
-                        deviceId,
+                        location: location,
+                        deviceId: deviceId,
                         timestamp: new Date().toISOString(),
                     })
                 });
