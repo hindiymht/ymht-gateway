@@ -12,32 +12,33 @@ export default function AttendanceForm() {
 
     // Load data on mount
     useEffect(() => {
+        // Get stored data
         const storedData = localStorage.getItem("formData");
+
         if (storedData) {
             try {
+                // Parse stored JSON
                 const data = JSON.parse(storedData);
 
-                // Check if it's an array and has at least one item
+                // Ensure it's an array and has items
                 if (Array.isArray(data) && data.length > 0) {
-                    // Get the first item and parse it (since it's stored as stringified JSON)
-                    const firstItemData = JSON.parse(data[0]);
-                    const storedDate = new Date(firstItemData.timestamp).setHours(0, 0, 0, 0);
+                    // Get first item directly (no extra parsing needed)
+                    const firstItem = data[0];
+
+                    // Normalize dates (remove time)
+                    const storedDate = new Date(firstItem.timestamp).setHours(0, 0, 0, 0);
                     const today = new Date().setHours(0, 0, 0, 0);
 
+                    // If same day, prefill inputs
                     if (storedDate === today) {
-                        setName(firstItemData.name || "");
-                        setMobile(firstItemData.mobile || "");
+                        setName(firstItem.name || "");
+                        setMobile(firstItem.mobile || "");
                     }
                 } else {
-                    const storedDate = new Date(data.timestamp).setHours(0, 0, 0, 0);
-                    const today = new Date().setHours(0, 0, 0, 0);
-
-                    if (storedDate === today) {
-                        setName(data.name || "");
-                        setMobile(data.mobile || "");
-                    }
+                    localStorage.removeItem("formData");
                 }
             } catch (e) {
+                // Handle invalid JSON
                 console.error("Error parsing local storage", e);
                 localStorage.removeItem("formData");
             }
