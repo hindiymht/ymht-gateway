@@ -1,12 +1,29 @@
+import Image from "next/image";
 import AttendanceForm from "@/components/AttendanceForm";
-import {ThemeSwitcher} from "@/components/ThemeSwitcher";
 
 export default function Home() {
     return (
-        <main
-            className="min-h-screen w-full flex flex-col items-center justify-center p-0 md:p-4 bg-gradient-brand transition-colors duration-500">
-            <ThemeSwitcher/>
-            <AttendanceForm/>
-        </main>
+        <div
+            className="w-full max-w-7xl mx-auto lg:max-w-full flex-1 flex flex-col lg:flex-row items-center justify-center px-4 lg:px-0 gap-8 lg:gap-0 pb-8 lg:pb-0">
+
+            {/* Left Area: Hero Image */}
+            <div
+                className="w-full lg:w-1/2 aspect-video rounded-2xl lg:rounded-none lg:rounded-r-4xl overflow-hidden relative shadow-sm order-1 lg:order-0">
+
+                <Image
+                    src="/assets/images/img-banner-summer-camp-2024.jpg"
+                    alt="Session Banner"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+            </div>
+
+            {/* Right Area: Form / User List */}
+            <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-0 lg:p-8 order-2 lg:order-0">
+                <AttendanceForm/>
+            </div>
+        </div>
     );
 }

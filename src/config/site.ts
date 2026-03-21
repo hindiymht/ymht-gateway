@@ -19,6 +19,7 @@ export const siteConfig = {
     audio: {
         light: "/assets/audios/switch-off.mp3",
         dark: "/assets/audios/switch-on.mp3",
+         delete: "/assets/audios/bin.mp3",
     }
 };
 
