@@ -24,6 +24,7 @@ export const getUserLocation = async (): Promise<string> => {
 };
 
 export const saveFormData = (name: string, mobile: string, location: string) => {
+    // Create data object
     const data = {
         name,
         mobile,
@@ -31,27 +32,26 @@ export const saveFormData = (name: string, mobile: string, location: string) => 
         timestamp: new Date().toISOString(),
     };
 
-    // 1. Fetch the raw data
+    // Get existing data from localStorage
     const existingData = localStorage.getItem("formData");
 
     let formDataArray;
 
     try {
-        // 2. Parse the data
+        // Parse existing data or initialize empty array
         const parsedData = existingData ? JSON.parse(existingData) : [];
 
-        // 3. Check if the parsed result is actually an array
-        // If it's an object or a single string, we wrap it in an array or reset it
+        // Ensure parsed data is an array
         formDataArray = Array.isArray(parsedData) ? parsedData : [];
     } catch (error) {
-        // 4. If JSON.parse fails (invalid format), initialize a fresh array
-        console.warn("localStorage contained invalid JSON, resetting to empty array.");
+        // Reset if JSON is invalid
+        console.warn("Invalid JSON in localStorage, resetting.");
         formDataArray = [];
     }
 
-    // 5. Add new data (tip: usually better to store objects, not stringified strings)
-    formDataArray.push(JSON.stringify(data));
+    // Push object directly (NOT stringified)
+    formDataArray.push(data);
 
-    // 6. Save back to localStorage
+    // Save back as stringified array
     localStorage.setItem("formData", JSON.stringify(formDataArray));
 };
