@@ -6,6 +6,8 @@ import React from "react";
 import {siteConfig} from "@/config/site";
 import {ThemeSwitcher} from "@/components/ThemeSwitcher";
 import Image from "next/image";
+import {Analytics} from "@vercel/analytics/next";
+import {SpeedInsights} from "@vercel/speed-insights/next";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -65,6 +67,9 @@ export default function RootLayout({children}: Readonly<{
 
             </div>
         </Providers>
+
+        <Analytics />
+        <SpeedInsights />
         </body>
         </html>
     );
