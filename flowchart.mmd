@@ -1,0 +1,135 @@
+flowchart TB
+ subgraph Google_Sheet_Backend["Google_Sheet_Backend"]
+        V["Receive POST Request"]
+        Q["Send Data to Google Script Web App"]
+        W["Parse JSON Data"]
+        X["Open Spreadsheet"]
+        Y@{ label: "Get Today's Sheet" }
+        Z{"Sheet Exists?"}
+        ZA["Create New Sheet With Headers"]
+        ZB["Use Existing Sheet"]
+        ZC["Read Existing Rows"]
+        ZD{"Duplicate Entry Found?"}
+        ZE["Return Error Response"]
+        ZF@{ label: "Append Row to Today's Sheet" }
+        ZG["Open Master Sheet"]
+        ZH{"Master Sheet Exists?"}
+        ZI["Create Master Sheet With Headers"]
+        ZJ["Read Master Sheet Data"]
+        ZK["Find User in Master Sheet"]
+        ZL{"User Found?"}
+        ZM["Add New User to Master Sheet"]
+        ZN["Use Existing User Row"]
+        ZO@{ label: "Check If Today's Date Column Exists" }
+        ZP{"Date Column Exists?"}
+        ZQ["Insert New Date Column"]
+        ZR["Set Default Attendance = No for All Users"]
+        ZS["Mark Current User = Yes"]
+        ZT["Apply Formatting and Borders"]
+        ZU["Return Success Response"]
+  end
+    A["Start Application"] --> B["Check Local Storage for Saved Users"]
+    B --> C{"Saved Users Found?"}
+    C -- Yes --> D["Show User List Screen"]
+    C -- No --> E["Show Registration Form"]
+    E --> F["User Enters Name, Mobile, Mht Id"]
+    F --> G["User Clicks Join"]
+    D --> H["User Selects Existing User"]
+    G --> I["Get Device ID"]
+    I --> J["Get User Location"]
+    J --> K["Get Current Timestamp"]
+    K --> L{"User Editing Existing Profile?"}
+    L -- Yes --> M["Update User in Local Storage"]
+    L -- No --> N{"New User?"}
+    N -- Yes --> O["Save New User to Local Storage"]
+    N -- No --> P["Continue Without Saving"]
+    M --> Q
+    O --> Q
+    P --> Q
+    Q --> R["Wait For Response"] & V
+    R --> S["Redirect to Meet link"]
+    V --> W
+    W --> X
+    X --> Y
+    Y --> Z
+    Z -- No --> ZA
+    Z -- Yes --> ZB
+    ZA --> ZC
+    ZB --> ZC
+    ZC --> ZD
+    ZD -- Yes --> ZE
+    ZD -- No --> ZF
+    ZF --> ZG
+    ZG --> ZH
+    ZH -- No --> ZI
+    ZH -- Yes --> ZJ
+    ZI --> ZK
+    ZJ --> ZK
+    ZK --> ZL
+    ZL -- No --> ZM
+    ZL -- Yes --> ZN
+    ZM --> ZO
+    ZN --> ZO
+    ZO --> ZP
+    ZP -- No --> ZQ
+    ZQ --> ZR
+    ZP -- Yes --> ZS
+    ZR --> ZS
+    ZS --> ZT
+    ZT --> ZU
+    H --> I
+
+    V@{ shape: lean-r}
+    Q@{ shape: rounded}
+    W@{ shape: rounded}
+    X@{ shape: rounded}
+    Y@{ shape: rounded}
+    ZA@{ shape: rounded}
+    ZB@{ shape: rounded}
+    ZC@{ shape: rounded}
+    ZE@{ shape: lean-r}
+    ZF@{ shape: rounded}
+    ZG@{ shape: rounded}
+    ZI@{ shape: rounded}
+    ZJ@{ shape: rounded}
+    ZK@{ shape: rounded}
+    ZM@{ shape: rounded}
+    ZN@{ shape: rounded}
+    ZO@{ shape: rounded}
+    ZQ@{ shape: rounded}
+    ZR@{ shape: rounded}
+    ZS@{ shape: rounded}
+    ZT@{ shape: rounded}
+    ZU@{ shape: lean-r}
+    A@{ shape: rounded}
+    B@{ shape: rounded}
+    D@{ shape: rounded}
+    E@{ shape: rounded}
+    F@{ shape: lean-r}
+    G@{ shape: rounded}
+    H@{ shape: rounded}
+    I@{ shape: rounded}
+    J@{ shape: rounded}
+    K@{ shape: rounded}
+    M@{ shape: rounded}
+    O@{ shape: rounded}
+    P@{ shape: rounded}
+    R@{ shape: lean-r}
+    S@{ shape: lean-r}
+    style V fill:#BBDEFB
+    style Z fill:#FFE0B2
+    style ZD fill:#FFE0B2
+    style ZE fill:#FFCDD2
+    style ZH fill:#FFE0B2
+    style ZL fill:#FFE0B2
+    style ZP fill:#FFE0B2
+    style ZR fill:#FFCDD2
+    style ZS fill:#C8E6C9
+    style ZU fill:#C8E6C9
+    style A fill:#C8E6C9
+    style C fill:#FFE0B2
+    style F fill:#BBDEFB
+    style L fill:#FFE0B2
+    style N fill:#FFE0B2
+    style R fill:#BBDEFB
+    style S fill:#BBDEFB
