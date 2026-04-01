@@ -67,7 +67,7 @@ export default function AttendanceForm() {
         setIsLoading(true);
 
         const formattedName = toTitleCase(submitName);
-        const formattedMhtId = submitMhtId.toUpperCase()
+        const formattedMhtId = submitMhtId.trim().toUpperCase();
 
         try {
             // Fetch device and location context
@@ -92,7 +92,7 @@ export default function AttendanceForm() {
             }
             // If submitting a brand new user via the form, add them to the top of the list
             else if (!isExistingUserClick) {
-                const alreadyExists = updatedUsers.some(u => u.name.toLowerCase() === submitName.toLowerCase() && u.mobile === submitMobile);
+                const alreadyExists = updatedUsers.some(u => toTitleCase(u.name) === formattedName && u.mobile === submitMobile);
                 if (!alreadyExists) {
                     updatedUsers.unshift({
                         name: formattedName,
