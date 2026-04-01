@@ -11,7 +11,7 @@ import {
     Avatar,
     Spinner
 } from "@heroui/react";
-import {getDeviceId, getUserLocation} from "@/lib/utils";
+import {getDeviceId, getUserLocation, toTitleCase} from "@/lib/utils";
 import {siteConfig} from "@/config/site";
 
 // Define the shape of the user data
@@ -66,6 +66,9 @@ export default function AttendanceForm() {
     const handleJoin = async (submitName: string, submitMobile: string, submitMhtId: string, isExistingUserClick = false) => {
         setIsLoading(true);
 
+        const formattedName = toTitleCase(submitName);
+        const formattedMhtId = submitMhtId.toUpperCase()
+
         try {
             // Fetch device and location context
             const location = await getUserLocation();
@@ -78,9 +81,9 @@ export default function AttendanceForm() {
             if (editIndex !== null) {
                 updatedUsers[editIndex] = {
                     ...updatedUsers[editIndex],
-                    name: submitName,
+                    name: formattedName,
                     mobile: submitMobile,
-                    mhtId: submitMhtId,
+                    mhtId: formattedMhtId,
                     timestamp: timestamp
                 };
                 localStorage.setItem("formData", JSON.stringify(updatedUsers));
@@ -89,12 +92,12 @@ export default function AttendanceForm() {
             }
             // If submitting a brand new user via the form, add them to the top of the list
             else if (!isExistingUserClick) {
-                const alreadyExists = updatedUsers.some(u => u.name === submitName && u.mobile === submitMobile);
+                const alreadyExists = updatedUsers.some(u => u.name.toLowerCase() === submitName.toLowerCase() && u.mobile === submitMobile);
                 if (!alreadyExists) {
                     updatedUsers.unshift({
-                        name: submitName,
+                        name: formattedName,
                         mobile: submitMobile,
-                        mhtId: submitMhtId,
+                        mhtId: formattedMhtId,
                         timestamp: timestamp
                     });
                     localStorage.setItem("formData", JSON.stringify(updatedUsers));
@@ -116,8 +119,8 @@ export default function AttendanceForm() {
                         'Connection': 'keep-alive',
                     },
                     body: JSON.stringify({
-                        name: submitName,
-                        mhtId: submitMhtId || null,
+                        name: formattedName,
+                        mhtId: formattedMhtId || null,
                         mobileNo: submitMobile,
                         location: location,
                         deviceId: deviceId,
