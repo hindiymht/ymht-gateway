@@ -55,3 +55,12 @@ export const saveFormData = (name: string, mobile: string, location: string) => 
     // Save back as stringified array
     localStorage.setItem("formData", JSON.stringify(formDataArray));
 };
+
+export const toTitleCase = (str: string): string => {
+    return str
+        .trim()
+        .toLowerCase()
+        .split(/\s+/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+};
