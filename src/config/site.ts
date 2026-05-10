@@ -3,7 +3,7 @@ export const siteConfig = {
         name: "YMHT Gateway",
         description: "Weekly YMHT Session Attendance",
         title: "Weekly YMHT Session",
-        subtitle: "EVERY SUNDAY 7 - 8:30 PM",
+        subtitle: "EVERY SUNDAY 10:30 AM - 12 Noon",
         cta: "JOIN SESSION",
         footer: "YMHT Digital Hindi - Boys"
     },
