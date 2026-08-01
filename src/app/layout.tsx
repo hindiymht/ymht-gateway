@@ -52,17 +52,17 @@ export default function RootLayout({children}: Readonly<{
                 </main>
 
                 {/* Global Footer */}
-                <footer className="w-full flex flex-col items-center justify-center py-6 gap-2">
+                <footer className="w-full flex flex-col items-center justify-center py-6">
                     {/* GNC Logo */}
                     <Image
-                        src="/assets/images/img-gnc-logo.png"
-                        alt="GNC Logo"
-                        width={48}
-                        height={48}
+                        src="/assets/images/mba-logo.svg"
+                        alt="MBA Logo"
+                        width={70}
+                        height={70}
                         className="object-contain"
                     />
 
-                    <p className="text-sm text-default-500">{siteConfig.text.footer}</p>
+                    <p className="text-sm font-bold text-default-500" style={{ color: '#0B3432' }}>{siteConfig.text.footer}</p>
                 </footer>
 
             </div>

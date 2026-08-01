@@ -11,7 +11,7 @@ export default function Home() {
                 className="w-full lg:w-1/2 aspect-video rounded-2xl lg:rounded-none lg:rounded-r-4xl overflow-hidden relative shadow-sm order-1 lg:order-0">
 
                 <Image
-                    src="/assets/images/img-banner-summer-camp-2024.jpg"
+                    src="/assets/images/MBA-SHEEL.jpg"
                     alt="Session Banner"
                     fill
                     className="object-cover"

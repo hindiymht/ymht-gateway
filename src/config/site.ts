@@ -1,11 +1,11 @@
 export const siteConfig = {
     text: {
-        name: "YMHT Gateway",
-        description: "Weekly YMHT Session Attendance",
-        title: "Weekly YMHT Session",
-        subtitle: "EVERY SUNDAY 10:30 AM - 12 Noon",
+        name: "MBA Session Gateway",
+        description: "Weekly MBA Session Attendance",
+        title: "MBA Session",
+        subtitle: "EVERY SUNDAY & WEDNESDAY at 9:00 PM",
         cta: "JOIN SESSION",
-        footer: "YMHT Digital Hindi - Boys"
+        footer: "Sheel Sadhak"
     },
     link: {
         script: process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL,
@@ -14,12 +14,12 @@ export const siteConfig = {
     image: {
         logo: "/assets/logo.svg",
         banner: "/assets/img-banner.jpg",
-        footerLogo: "/assets/img-gnc-logo.png",
+        footerLogo: "/assets/mba-logo.svg",
     },
     audio: {
         light: "/assets/audios/switch-off.mp3",
         dark: "/assets/audios/switch-on.mp3",
-         delete: "/assets/audios/bin.mp3",
+        delete: "/assets/audios/bin.mp3",
     }
 };
 

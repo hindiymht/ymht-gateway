@@ -17,7 +17,6 @@ import {siteConfig} from "@/config/site";
 // Define the shape of the user data
 interface UserProfile {
     name: string;
-    mobile: string;
     mhtId: string;
     timestamp: string;
 }
@@ -25,7 +24,6 @@ interface UserProfile {
 export default function AttendanceForm() {
     // Form input states
     const [name, setName] = useState("");
-    const [mobile, setMobile] = useState("");
     const [mhtId, setMhtId] = useState("");
 
     // UI states for loading and view toggling
@@ -63,7 +61,7 @@ export default function AttendanceForm() {
     }, []);
 
     // Core logic to handle the API submission and local storage updates
-    const handleJoin = async (submitName: string, submitMobile: string, submitMhtId: string, isExistingUserClick = false) => {
+    const handleJoin = async (submitName: string, submitMhtId: string, isExistingUserClick = false) => {
         setIsLoading(true);
 
         const formattedName = toTitleCase(submitName.trim());
@@ -82,7 +80,6 @@ export default function AttendanceForm() {
                 updatedUsers[editIndex] = {
                     ...updatedUsers[editIndex],
                     name: formattedName,
-                    mobile: submitMobile,
                     mhtId: formattedMhtId,
                     timestamp: timestamp
                 };
@@ -94,13 +91,12 @@ export default function AttendanceForm() {
             else if (!isExistingUserClick) {
                 const alreadyExists = updatedUsers.some(u =>
                     u.name.trim().toLowerCase() === formattedName.trim().toLowerCase()
-                    && u.mobile === submitMobile
+                    && u.mhtId === submitMhtId
                 );
 
                 if (!alreadyExists) {
                     updatedUsers.unshift({
                         name: formattedName,
-                        mobile: submitMobile,
                         mhtId: formattedMhtId,
                         timestamp: timestamp
                     });
@@ -113,30 +109,56 @@ export default function AttendanceForm() {
             const scriptUrl = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
 
             if (scriptUrl) {
-                // We use await here to ensure data is sent before redirecting
-                await fetch(scriptUrl, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: {
-                        'Content-Type': 'text/plain', // Prevents the Preflight/OPTIONS request
-                        'Accept': '*/*',
-                        'Connection': 'keep-alive',
-                    },
-                    body: JSON.stringify({
-                        name: formattedName,
-                        mhtId: formattedMhtId || null,
-                        mobileNo: submitMobile,
-                        location: location,
-                        deviceId: deviceId,
-                        timestamp: timestamp,
+                 // fetch method to call api.
+                try {
+                    await fetch(scriptUrl, {
+                        method: "POST",
+                        mode: "cors", // This is allowed for simple requests
+                        headers: {
+                            'Content-Type': 'text/plain', // Prevents the Preflight/OPTIONS request
+                            'Accept': '*/*',
+                            'Connection': 'keep-alive',
+                        },
+                        body: JSON.stringify({
+                            name: formattedName,
+                            mhtId: submitMhtId,
+                            location: location,
+                            deviceId: deviceId,
+                            timestamp: timestamp,
+                        }),
                     })
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json(); // Parses the custom JSON response text into a JS object
+                    })
+                    .then(data => {
+                        // 4. Handle your custom responses here
+                        console.log("Response received:", data);
+                        
+                        if (data.es === 0) {
+                            // alert(`Success: ${data.message}`);
+                            if (data.zoom_link) {
+                                window.location.assign(data.zoom_link);
+                            } else {
+                                alert(`Something went wrong!, Please try again`);
+                            }
+                            // Update your UI for a valid user
+                        } else {
+                            alert(`Error: ${data.message}`);
+                            // Update your UI for an invalid user
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error sending/receiving data:", error);
+                    });;
+
+                } catch (error) {
+                    console.error('Error: ', error);
+                    alert('Failed to register. Please try again.');
+                }
             }
-
-            // Redirect to the Meet link on success
-            window.location.assign(siteConfig.link.meet ?? "");
-            console.log("Redirecting to the meeting.");
-
         } catch (error) {
             console.error("Submission error:", error);
             alert("Failed to register. Please try again.");
@@ -151,13 +173,12 @@ export default function AttendanceForm() {
     const onSubmitForm = (e: React.SyntheticEvent) => {
         e.preventDefault();
         // Use void to explicitly mark the floating promise as intentionally unawaited
-        void handleJoin(name, mobile, mhtId, false);
+        void handleJoin(name, mhtId, false);
     };
 
     // Populate the form fields and switch to form view for editing
     const handleEditUser = (user: UserProfile, index: number) => {
         setName(user.name || "");
-        setMobile(user.mobile || "");
         setMhtId(user.mhtId || "");
         setEditIndex(index);
         setView('form');
@@ -218,26 +239,9 @@ export default function AttendanceForm() {
                         }}
                     />
 
-                    {/* Mobile number */}
-                    <Input
-                        isRequired
-                        isClearable
-                        type="tel"
-                        label="Mobile Number"
-                        placeholder="Enter mobile number"
-                        pattern="^[0-9]{10}$"
-                        value={mobile}
-                        onValueChange={setMobile}
-                        variant="bordered"
-                        errorMessage={mobile.trim().length === 0 ? "Mobile number is required" : "Invalid mobile number"}
-                        classNames={{
-                            label: "text-default-700 font-medium",
-                            inputWrapper: "border-1 border-default-200 shadow-sm",
-                        }}
-                    />
-
                     {/* Mht Id */}
                     <Input
+                        isRequired
                         isClearable
                         type="text"
                         label="Mht Id"
@@ -302,12 +306,11 @@ export default function AttendanceForm() {
                                         onClick={() => {
                                             setJoiningIndex(index);
                                             // Use void to explicitly mark the floating promise as intentionally unawaited
-                                            void handleJoin(u.name, u.mobile, u.mhtId, true);
+                                            void handleJoin(u.name, u.mhtId, true);
                                         }}
                                     >
-                                        {/* Avatar configuration specifically tailored for male avatars using trait filtering */}
                                         <Avatar
-                                            src={`https://api.dicebear.com/9.x/notionists/svg?seed=${u.name}&radius=50&backgroundColor=transparent&gestureProbability=0&beardProbability=0&body=variant01,variant03,variant07,variant09,variant10,variant11,variant18&eyes=variant05&hair=hat,variant01,variant05,variant06,variant13,variant17,variant19,variant22,variant34,variant35,variant38,variant54,variant55&lips=variant03,variant14,variant17,variant22,variant23,variant30`}
+                                            src="/assets/images/samayik.png"
                                             className="w-12 h-12 border-1 border-white shadow-sm bg-white shrink-0"
                                         />
 
@@ -315,7 +318,7 @@ export default function AttendanceForm() {
                                             <span
                                                 className="font-bold text-slate-800 dark:text-slate-100">{u.name}</span>
                                             <span className="text-sm text-slate-600 dark:text-slate-400">
-                                                {u.mobile} {u.mhtId ? ` • ID: ${u.mhtId}` : ""}
+                                                {`MHT ID: ${u.mhtId}`}
                                             </span>
                                         </div>
                                     </div>
@@ -379,7 +382,6 @@ export default function AttendanceForm() {
                             onClick={() => {
                                 setEditIndex(null);
                                 setName("");
-                                setMobile("");
                                 setMhtId("");
                                 setView('form');
                             }}
