@@ -246,7 +246,7 @@ export default function AttendanceForm() {
                         type="text"
                         label="Mht Id"
                         placeholder="Enter Mht Id"
-                        pattern="^([Zz][0-9]{3,6}|[0-9]{4,7})$"
+                        pattern="^([Zz][0-9]{3,6}|[0-9]{3,7})$"
                         value={mhtId}
                         onValueChange={setMhtId}
                         variant="bordered"
